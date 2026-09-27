@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run project preflight
-        run: ./scripts/preflight.sh
+        run: bash scripts/preflight.sh
