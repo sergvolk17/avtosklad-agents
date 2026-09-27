@@ -1,0 +1,25 @@
+services:
+  hermes:
+    image: nousresearch/hermes-agent:stable
+    container_name: avtosklad-hermes
+    restart: unless-stopped
+    volumes:
+      - hermes-data:/opt/data
+      - ../../workspace:/workspace
+      - ../../skills:/opt/avtosklad-skills:ro
+      - ../../AGENTS.md:/workspace/AGENTS.md:ro
+    working_dir: /workspace
+    env_file:
+      - ../../.env
+    command: ["gateway", "run"]
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 256
+    mem_limit: 2g
+    cpus: 2.0
+    # No public ports by default.
+
+volumes:
+  hermes-data:
