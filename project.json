@@ -1,0 +1,7 @@
+{
+  "name": "avtosklad-agents",
+  "version": "0.1.0",
+  "purpose": "Safe Hermes-based agent platform for AvtoSklad",
+  "production_write_default": false,
+  "roles": ["manager", "pricing", "procurement", "tech", "content", "support"]
+}
