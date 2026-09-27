@@ -3,7 +3,9 @@ set -euo pipefail
 
 COMPOSE="docker compose -f deploy/vps/docker-compose.yml"
 
-$COMPOSE run --rm hermes config set terminal.backend docker
+# Hermes itself already runs inside a restricted container.
+# Do not mount the Docker socket or start nested Docker by default.
+$COMPOSE run --rm hermes config set terminal.backend local
 $COMPOSE run --rm hermes config set terminal.cwd /workspace
 $COMPOSE run --rm hermes config set skills.write_approval true
 $COMPOSE run --rm hermes config set memory.write_approval true
