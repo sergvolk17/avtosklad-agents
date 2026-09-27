@@ -1,0 +1,19 @@
+services:
+  hermes:
+    image: nousresearch/hermes-agent:stable
+    container_name: avtosklad-hermes
+    restart: unless-stopped
+    volumes:
+      - hermes-data:/opt/data
+      - ./workspace:/workspace
+      - ./skills:/opt/avtosklad-skills:ro
+      - ./AGENTS.md:/workspace/AGENTS.md:ro
+    working_dir: /workspace
+    env_file:
+      - .env
+    command: ["gateway", "run"]
+    # Порты намеренно не публикуются по умолчанию.
+    # Dashboard/API включайте только за VPN/SSH-туннелем или с надёжной авторизацией.
+
+volumes:
+  hermes-data:
