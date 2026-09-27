@@ -10,3 +10,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run project preflight
         run: bash scripts/preflight.sh
+      - name: Validate shell scripts
+        run: |
+          bash -n scripts/bootstrap.sh
+          bash -n scripts/preflight.sh
+          bash -n deploy/vps/bootstrap-vps.sh
+          bash -n deploy/vps/apply-safety.sh
+          bash -n deploy/vps/healthcheck.sh
+      - name: Validate VPS compose
+        run: |
+          cp .env.example .env
+          docker compose -f deploy/vps/docker-compose.yml config >/dev/null
