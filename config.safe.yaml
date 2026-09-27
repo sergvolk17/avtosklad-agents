@@ -1,0 +1,26 @@
+# Шаблон безопасных настроек. После `hermes setup` значения можно внести
+# командами `hermes config set` или аккуратно объединить с /opt/data/config.yaml.
+
+terminal:
+  backend: docker
+  cwd: /workspace
+
+skills:
+  write_approval: true
+  external_dirs:
+    - /opt/avtosklad-skills
+
+memory:
+  write_approval: true
+
+tool_loop_guardrails:
+  warnings_enabled: true
+  non_interactive_hard_stop_enabled: true
+
+security:
+  allow_private_urls: false
+  allow_lazy_installs: false
+
+# Намеренно не добавляем широкие command_allowlist правила.
+# Разрешения должны появляться постепенно после проверки реальных команд.
+command_allowlist: []
