@@ -1,0 +1,234 @@
+openapi: 3.1.0
+info:
+  title: AutoSklad App API
+  version: 0.1.0
+  description: |
+    Integration layer for the AutoSklad mobile/web application.
+    UI design is intentionally out of scope: existing visual style must remain unchanged.
+servers:
+  - url: /api/v1
+
+paths:
+  /me:
+    get:
+      summary: Current customer profile
+      responses:
+        '200': { description: OK }
+
+  /garage:
+    get:
+      summary: List customer vehicles
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Add vehicle
+      responses:
+        '201': { description: Created }
+
+  /garage/{vehicleId}:
+    patch:
+      summary: Update vehicle
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Remove vehicle
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: Deleted }
+
+  /catalog/search:
+    get:
+      summary: Search by article / brand / query
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+        - in: query
+          name: brand
+          schema: { type: string }
+        - in: query
+          name: vehicleId
+          schema: { type: string }
+      responses:
+        '200': { description: Search results }
+
+  /catalog/{productId}:
+    get:
+      summary: Product details
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Product }
+
+  /oil-selection:
+    get:
+      summary: YACCO oil selection for a vehicle
+      parameters:
+        - in: query
+          name: vehicleId
+          schema: { type: string }
+        - in: query
+          name: vin
+          schema: { type: string }
+      responses:
+        '200': { description: Recommendations }
+
+  /cart:
+    get:
+      summary: Current cart
+      responses:
+        '200': { description: Cart }
+    post:
+      summary: Add line to cart
+      responses:
+        '200': { description: Updated cart }
+
+  /cart/{lineId}:
+    patch:
+      summary: Change quantity
+      parameters:
+        - in: path
+          name: lineId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Updated cart }
+    delete:
+      summary: Remove line
+      parameters:
+        - in: path
+          name: lineId
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: Removed }
+
+  /checkout/quote:
+    post:
+      summary: Calculate delivery, discounts and final totals
+      responses:
+        '200': { description: Quote }
+
+  /orders:
+    get:
+      summary: Customer order history
+      responses:
+        '200': { description: Orders }
+    post:
+      summary: Create order
+      responses:
+        '201': { description: Created }
+
+  /orders/{orderId}:
+    get:
+      summary: Order details and status
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Order }
+
+  /orders/{orderId}/repeat:
+    post:
+      summary: Rebuild cart from previous order
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Cart }
+
+  /loyalty:
+    get:
+      summary: Loyalty balance, level and ledger
+      responses:
+        '200': { description: Loyalty account }
+
+  /b2b/account:
+    get:
+      summary: B2B company and pricing context
+      responses:
+        '200': { description: B2B account }
+
+  /services:
+    get:
+      summary: Search auto services
+      responses:
+        '200': { description: Services }
+
+  /service-bookings:
+    post:
+      summary: Create service booking
+      responses:
+        '201': { description: Booking created }
+
+  /notifications/devices:
+    post:
+      summary: Register push token
+      responses:
+        '204': { description: Registered }
+
+  /chat/messages:
+    get:
+      summary: Chat history
+      responses:
+        '200': { description: Messages }
+    post:
+      summary: Send message to JARVIS / support
+      responses:
+        '201': { description: Message accepted }
+
+  /admin/app/metrics:
+    get:
+      summary: App KPIs for JARVIS control center
+      responses:
+        '200': { description: Metrics }
+
+components:
+  schemas:
+    Vehicle:
+      type: object
+      properties:
+        id: { type: string }
+        vin: { type: string }
+        make: { type: string }
+        model: { type: string }
+        year: { type: integer }
+        engine: { type: string }
+        primary: { type: boolean }
+
+    ProductOffer:
+      type: object
+      properties:
+        productId: { type: string }
+        article: { type: string }
+        brand: { type: string }
+        title: { type: string }
+        price: { type: number }
+        quantity: { type: number }
+        leadTimeDays: { type: integer }
+        source: { type: string }
+
+    Order:
+      type: object
+      properties:
+        id: { type: string }
+        status: { type: string }
+        paymentStatus: { type: string }
+        total: { type: number }
+        createdAt: { type: string, format: date-time }
